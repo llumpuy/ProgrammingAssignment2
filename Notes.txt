@@ -1,0 +1,38 @@
+
+## Following the same structucture, create a "New" function that produces objects of the class CacheMatrix
+## and a function that produces the inverse matrix over an object of this class -selectively using the cached
+## data or producing it anew
+## The class has 4 methods: get/set/getInverse/setInverse
+## 
+## In the second function, keep the 'from cache' message to clarify when the output is fresh or frozen -remove
+## past debugging if needed 
+## Error management from the cacheSolve() function is inherited from the original solve() function (just let its
+## errors pop up
+
+makeCacheMatrix <- function(x = matrix(numeric(0),0,0)) { 
+        i <- NULL 
+        set <- function(y) { 
+                x <<- y 
+                i <<- NULL 
+        } 
+        get <- function() x 
+        setInverse <- function(Inverse) i <<- Inverse 
+        getInverse <- function() i 
+        list(set = set, get = get, 
+             setInverse = setInverse, 
+             getInverse = getInverse) 
+} 
+
+
+
+cacheSolve <- function(x, ...) { 
+        i <- x$getInverse() 
+        if(!is.null(i)) { 
+                message("getting cached data") 
+                return(i) 
+        } 
+        data <- x$get() 
+        i <- solve(data, ...) 
+        x$setInverse(i) 
+        i 
+}
